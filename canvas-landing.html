@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas Hero</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+@keyframes heroNavSlideDown {
+0% { opacity: 0; transform: translateY(-30px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroStickyPop {
+0% { opacity: 0; transform: scale(0.5) rotate(var(--tw-rotate, 0deg)); }
+60% { opacity: 1; transform: scale(1.05) rotate(var(--tw-rotate, 0deg)); }
+100% { opacity: 1; transform: scale(1) rotate(var(--tw-rotate, 0deg)); }
+}
+@keyframes heroStickyFloat1 {
+0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, 0deg)); }
+50% { transform: translateY(-8px) rotate(calc(var(--tw-rotate, 0deg) + 2deg)); }
+}
+@keyframes heroStickyFloat2 {
+0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, 0deg)); }
+50% { transform: translateY(-6px) rotate(calc(var(--tw-rotate, 0deg) - 2deg)); }
+}
+@keyframes heroArrowDraw {
+0% { stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
+10% { opacity: 1; stroke-dasharray: 400; stroke-dashoffset: 400; }
+100% { stroke-dasharray: 400; stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes heroFrameFadeScale {
+0% { opacity: 0; transform: scale(0.95); }
+100% { opacity: 1; transform: scale(1); }
+}
+@keyframes heroTitleFadeScale {
+0% { opacity: 0; transform: scale(0.85); }
+100% { opacity: 1; transform: scale(1); }
+}
+@keyframes heroSubheadSlideUp {
+0% { opacity: 0; transform: translateY(20px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroToolbarSlideIn {
+0% { opacity: 0; transform: translate(-40px, -50%); }
+100% { opacity: 1; transform: translate(0, -50%); }
+}
+@keyframes heroCtaPop {
+0% { opacity: 0; transform: scale(0.9); }
+60% { opacity: 1; transform: scale(1.05); }
+100% { opacity: 1; transform: scale(1); }
+}
+@keyframes heroBorderDraw {
+0% { stroke-dasharray: 600; stroke-dashoffset: 600; opacity: 0; }
+1% { opacity: 1; stroke-dasharray: 600; stroke-dashoffset: 600; }
+100% { stroke-dasharray: 600; stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes heroCursorPlay {
+0%, 100% { transform: translate(0, 0) scale(1); }
+25% { transform: translate(-10px, -15px) scale(0.95); }
+50% { transform: translate(5px, -5px) scale(1); }
+75% { transform: translate(10px, 15px) scale(1.05); }
+}
+.hero-anim-nav { animation: heroNavSlideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.hero-anim-sticky-1 { animation: heroStickyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards, heroStickyFloat1 4s ease-in-out 0.8s infinite; }
+.hero-anim-sticky-2 { animation: heroStickyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards, heroStickyFloat2 4s ease-in-out 1s infinite; }
+.hero-anim-sticky-3 { animation: heroStickyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s backwards, heroStickyFloat1 4s ease-in-out 1.2s infinite; }
+.hero-anim-sticky-4 { animation: heroStickyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s backwards, heroStickyFloat2 4s ease-in-out 1.4s infinite; }
+.hero-anim-sticky-5 { animation: heroStickyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1s backwards, heroStickyFloat1 4s ease-in-out 1.6s infinite; }
+.hero-anim-arrow-1 { animation: heroArrowDraw 1s ease-out 1.2s backwards; }
+.hero-anim-arrow-2 { animation: heroArrowDraw 1s ease-out 1.4s backwards; }
+.hero-anim-title { animation: heroTitleFadeScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.4s backwards; }
+.hero-anim-subhead { animation: heroSubheadSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.6s backwards; }
+.hero-anim-toolbar { animation: heroToolbarSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.8s backwards; }
+.hero-anim-cta-1 { animation: heroCtaPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2s backwards; }
+.hero-anim-cta-2 { animation: heroCtaPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s backwards; }
+.hero-anim-border { animation: heroBorderDraw 1.5s ease-out 2.4s backwards; }
+.hero-anim-cursor { animation: heroCursorPlay 4s ease-in-out 3s infinite backwards; }
+</style>
+</head>
+
+<body class="min-h-screen overflow-x-hidden bg-[#fdfcf9] text-black antialiased [font-family:'Patrick_Hand',cursive]">
+  <div class="min-h-screen overflow-hidden w-full relative">
+    <!-- HEADER -->
+    <header class="relative z-30 mx-auto flex w-full items-center justify-between rounded-b-3xl bg-white/95 px-5 py-6 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.10)] md:px-10 lg:px-12 hero-anim-nav">
+      <div class="flex items-center gap-4">
+        <div class="text-5xl tracking-tight [font-family:'Chewy',cursive]">Canvas</div>
+      </div>
+      <nav class="hidden items-center gap-8 text-2xl lg:flex xl:gap-11">
+        <a href="#" class="relative flex items-center gap-3">
+          <i data-lucide="house" class="h-6 w-6 fill-black"></i>
+          <span>Home</span>
+          <span class="absolute -bottom-5 left-0 h-1 w-full rounded-full bg-[#0b7cff]"></span>
+        </a>
+        <a href="#features" class="flex items-center gap-3">
+          <i data-lucide="circle-dot-dashed" class="h-6 w-6 fill-black"></i>
+          <span>Features</span>
+        </a>
+        <a href="#product-preview" class="flex items-center gap-3">
+          <i data-lucide="layout-grid" class="h-6 w-6 fill-black"></i>
+          <span>Templates</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i data-lucide="user-round" class="h-6 w-6 fill-black"></i>
+          <span>Use Cases</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i data-lucide="tag" class="h-6 w-6 fill-black"></i>
+          <span>Pricing</span>
+        </a>
+        <a href="#" class="flex items-center gap-3">
+          <i data-lucide="mail" class="h-6 w-6 fill-black"></i>
+          <span>Contact</span>
+        </a>
+      </nav>
+      <div class="hidden items-center gap-7 text-2xl lg:flex">
+        <a href="#">Log in</a>
+        <a href="#" class="rounded-xl border-2 border-black bg-[#0b7cff] px-8 py-3 text-2xl text-white shadow-[inset_0_0_0_0.125rem_rgba(255,255,255,0.75),0_0.2rem_0_#000]">Start for free</a>
+      </div>
+      <button class="lg:hidden">
+        <i data-lucide="menu" class="h-8 w-8"></i>
+      </button>
+    </header>
+
+    <!-- HERO MAIN -->
+    <main class="relative mx-auto flex min-h-[calc(100vh-7rem)] max-w-[105rem] items-center justify-center px-5 py-16 sm:px-8 lg:px-12 hero-anim-arrow-1 hero-anim-arrow-2">
+      <style>
+        @keyframes drawTop { 0%, 2% { width: 0; animation-timing-function: linear; } 15%, 100% { width: 100%; } }
+        @keyframes drawRight { 0%, 15% { height: 0; animation-timing-function: linear; } 25%, 100% { height: 100%; } }
+        @keyframes drawBottom { 0%, 25% { width: 0; animation-timing-function: linear; } 40%, 100% { width: 100%; } }
+        @keyframes drawLeft { 0%, 40% { height: 0; animation-timing-function: linear; } 50%, 100% { height: 100%; } }
+        @keyframes moveCursor {
+          0% { left: 0%; top: 0%; opacity: 0; transform: translate(-20%, -20%); animation-timing-function: linear; }
+          2% { left: 0%; top: 0%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: linear; }
+          15% { left: 100%; top: 0%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: linear; }
+          25% { left: 100%; top: 100%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: linear; }
+          40% { left: 0%; top: 100%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: linear; }
+          50% { left: 0%; top: 0%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: ease-in-out; }
+          55% { left: 0%; top: 0%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: ease-in-out; }
+          65% { left: 100%; top: 100%; opacity: 1; transform: translate(-20%, -20%); animation-timing-function: ease-in-out; }
+          70% { left: 100%; top: 100%; opacity: 1; transform: translate(-20%, -20%) scale(0.8); animation-timing-function: ease-in-out; }
+          85% { left: 102%; top: 105%; opacity: 1; transform: translate(-20%, -20%) scale(0.8); animation-timing-function: ease-in-out; }
+          90% { left: 102%; top: 105%; opacity: 1; transform: translate(-20%, -20%) scale(1); animation-timing-function: ease-in-out; }
+          95%, 100% { left: 102%; top: 105%; opacity: 0; transform: translate(-20%, -20%) scale(1); }
+        }
+        @keyframes popIn {
+          0%, 50% { transform: scale(0); opacity: 0; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+          55%, 100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes popInTx {
+          0%, 50% { transform: translateX(-50%) scale(0); opacity: 0; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+          55%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+        @keyframes popInTy {
+          0%, 50% { transform: translateY(-50%) scale(0); opacity: 0; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+          55%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+        }
+        @keyframes resizeContainer {
+          0%, 70% { transform: scale(1); animation-timing-function: ease-in-out; }
+          85%, 90% { transform: scale(1.02); animation-timing-function: ease-in-out; }
+          100% { transform: scale(1); }
+        }
+      </style>
+
+      <!-- Toolbar -->
+      <div class="pointer-events-none absolute left-5 top-1/2 z-20 hidden -translate-y-1/2 rounded-xl border border-black/10 bg-white px-4 py-5 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.15)] md:block hero-anim-toolbar">
+        <div class="flex flex-col items-center gap-7">
+          <div class="rounded-md bg-[#0b7cff] p-2 text-white"><i data-lucide="mouse-pointer-2" class="h-6 w-6"></i></div>
+          <i data-lucide="square" class="h-6 w-6"></i>
+          <span class="text-4xl font-medium leading-none [font-family:Arial,sans-serif]">T</span>
+          <div class="h-8 w-8 rounded bg-[#ffe36e]"></div>
+          <i data-lucide="pencil" class="h-7 w-7"></i>
+          <i data-lucide="ellipsis" class="h-7 w-7"></i>
+        </div>
+      </div>
+
+      <!-- Sticky Notes -->
+      <div class="absolute left-[11%] top-[10%] hidden rotate-[-5deg] bg-[#93f4be] px-9 py-7 shadow-[0_1.25rem_2.5rem_rgba(0,0,0,0.13)] lg:block hero-anim-sticky-1">
+        <div class="absolute left-1/2 top-[-1.15rem] h-7 w-20 -translate-x-1/2 rotate-[-1deg] bg-black/15"></div>
+        <div class="flex items-center gap-5 text-3xl leading-tight tracking-tight">
+          <i data-lucide="users-round" class="h-11 w-11"></i>
+          <span>Real-time<br>collaboration</span>
+        </div>
+      </div>
+
+      <div class="absolute left-[13%] bottom-[13%] hidden rotate-[5deg] bg-[#ffe978] px-9 py-7 shadow-[0_1.25rem_2.5rem_rgba(0,0,0,0.12)] lg:block hero-anim-sticky-2">
+        <div class="absolute left-1/2 top-[-1.15rem] h-7 w-20 -translate-x-1/2 rotate-[6deg] bg-black/15"></div>
+        <div class="flex items-center gap-6 text-3xl leading-tight tracking-tight">
+          <i data-lucide="infinity" class="h-12 w-12"></i>
+          <span>Infinite<br>boards</span>
+        </div>
+      </div>
+
+      <div class="absolute right-[11%] top-[13%] hidden rotate-[2deg] bg-[#ffbd91] px-10 py-8 shadow-[0_1.25rem_2.5rem_rgba(0,0,0,0.13)] lg:block hero-anim-sticky-3">
+        <div class="absolute left-1/2 top-[-1.15rem] h-7 w-20 -translate-x-1/2 rotate-[2deg] bg-black/15"></div>
+        <div class="flex items-center gap-6 text-3xl tracking-tight">
+          <i data-lucide="layout-grid" class="h-12 w-12"></i>
+          <span>Templates</span>
+        </div>
+      </div>
+
+      <div class="absolute right-[8%] top-[44%] hidden rotate-[-3deg] bg-[#9fe5ff] px-9 py-7 shadow-[0_1.25rem_2.5rem_rgba(0,0,0,0.12)] lg:block hero-anim-sticky-4">
+        <div class="absolute left-1/2 top-[-1.15rem] h-7 w-20 -translate-x-1/2 rotate-[-1deg] bg-black/15"></div>
+        <div class="flex items-center gap-6 text-3xl leading-tight tracking-tight">
+          <i data-lucide="users-round" class="h-12 w-12"></i>
+          <span>Built for<br>teams</span>
+        </div>
+        <svg class="absolute -bottom-6 -right-6 h-8 w-8 text-[#0b7cff] hero-anim-cursor" viewBox="0 0 28 28" fill="none">
+          <path d="M5 3L21 16L13 18L10 25L5 3Z" fill="currentColor" stroke="white" stroke-width="2" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+
+      <div class="absolute bottom-[9%] right-[16%] hidden rotate-[4deg] bg-[#f28cbd] px-9 py-7 shadow-[0_1.25rem_2.5rem_rgba(0,0,0,0.12)] lg:block hero-anim-sticky-5">
+        <div class="absolute left-1/2 top-[-1.15rem] h-7 w-20 -translate-x-1/2 rotate-[2deg] bg-black/15"></div>
+        <div class="flex items-center gap-6 text-3xl leading-tight tracking-tight">
+          <i data-lucide="presentation" class="h-12 w-12"></i>
+          <span>Present ideas<br>visually</span>
+        </div>
+      </div>
+
+      <!-- Arrows -->
+      <svg class="pointer-events-none absolute left-[18%] top-[28%] hidden h-32 w-32 lg:block" viewBox="0 0 140 140" fill="none">
+        <path d="M41 18C38 58 67 75 107 75" stroke="black" stroke-width="4" stroke-linecap="round"></path>
+        <path d="M91 58L109 76L84 85" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+
+      <svg class="pointer-events-none absolute right-[7%] top-[27%] hidden h-32 w-32 lg:block" viewBox="0 0 140 140" fill="none">
+        <path d="M95 20C130 40 124 74 80 93" stroke="black" stroke-width="4" stroke-linecap="round"></path>
+        <path d="M99 98L78 94L95 77" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+
+      <!-- Decorative Lines -->
+      <div class="pointer-events-none absolute right-[7%] top-[47%] hidden text-[#0b7cff] lg:block hero-anim-sticky-5">
+        <div class="relative h-16 w-16">
+          <span class="absolute left-3 top-5 h-1 w-8 rounded-full bg-[#0b7cff]"></span>
+          <span class="absolute left-7 top-0 h-1 w-5 rotate-[-55deg] rounded-full bg-[#0b7cff]"></span>
+          <span class="absolute left-9 top-10 h-1 w-5 rotate-[20deg] rounded-full bg-[#0b7cff]"></span>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <section class="relative z-10 flex w-full max-w-5xl flex-col items-center text-center hero-anim-subhead">
+        <div class="mb-8 flex items-center gap-8 text-[#0b7cff]">
+          <p class="text-3xl uppercase tracking-tight sm:text-4xl md:text-5xl">Visual Collaboration Tool</p>
+        </div>
+
+        <div class="relative flex w-full items-center justify-center bg-white/5 px-6 py-8 sm:px-10 md:px-14 lg:px-16" style="animation: heroFrameFadeScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s backwards, resizeContainer 5s infinite 2s; transform-origin: top left;">
+          <div class="absolute left-0 top-0 z-10 h-[2px] bg-[#0b7cff]" style="animation: drawTop 5s infinite;"></div>
+          <div class="absolute right-0 top-0 z-10 w-[2px] bg-[#0b7cff]" style="animation: drawRight 5s infinite;"></div>
+          <div class="absolute bottom-0 right-0 z-10 h-[2px] bg-[#0b7cff]" style="animation: drawBottom 5s infinite;"></div>
+          <div class="absolute bottom-0 left-0 z-10 w-[2px] bg-[#0b7cff]" style="animation: drawLeft 5s infinite;"></div>
+
+          <div class="pointer-events-none absolute z-50" style="animation: moveCursor 5s infinite ease-in-out;">
+            <div class="relative rotate-[-10deg] text-[#0b7cff]">
+              <svg class="h-16 w-16 drop-shadow-sm md:h-20 md:w-20" viewBox="0 0 80 80" fill="none">
+                <path d="M13 8L63 48L38 52L27 75L13 8Z" fill="#0B7CFF" stroke="black" stroke-width="4" stroke-linejoin="round"></path>
+              </svg>
+              <span class="absolute -right-5 top-4 h-1 w-5 rotate-[-20deg] rounded-full bg-[#0b7cff] md:-right-7 md:top-5 md:w-6"></span>
+              <span class="absolute -right-1 -top-1 h-1 w-4 rotate-[-55deg] rounded-full bg-[#0b7cff] md:-right-2 md:w-5"></span>
+              <span class="absolute -right-3 bottom-2 h-1 w-4 rotate-[25deg] rounded-full bg-[#0b7cff] md:-right-4 md:bottom-3 md:w-5"></span>
+            </div>
+          </div>
+
+          <span class="absolute -left-2 -top-2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popIn 5s infinite;"></span>
+          <span class="absolute -top-2 left-1/2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popInTx 5s infinite;"></span>
+          <span class="absolute -right-2 -top-2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popIn 5s infinite;"></span>
+          <span class="absolute -left-2 top-1/2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popInTy 5s infinite;"></span>
+          <span class="absolute -right-2 top-1/2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popInTy 5s infinite;"></span>
+          <span class="absolute -bottom-2 left-1/2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popInTx 5s infinite;"></span>
+          <span class="absolute -bottom-2 -left-2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popIn 5s infinite;"></span>
+          <span class="absolute -bottom-2 -right-2 z-10 h-4 w-4 border-2 border-[#0b7cff] bg-white" style="animation: popIn 5s infinite;"></span>
+
+          <h1 class="select-none text-8xl uppercase leading-none tracking-tight text-[#070707] [font-family:'Chewy',cursive] sm:text-9xl md:text-[10rem] lg:text-[12rem] hero-anim-title">CANVAS</h1>
+        </div>
+
+        <p class="mt-8 max-w-2xl text-4xl leading-tight tracking-tight md:text-5xl">
+          Brainstorm, design, and organize<br class="hidden sm:block">
+          ideas in one <span class="relative inline-block">flexible<span class="absolute -bottom-1 left-0 h-1 w-full rounded-full bg-[#0b7cff]"></span></span> workspace.
+        </p>
+
+        <div class="flex flex-col gap-6 sm:flex-row mt-10 gap-x-6 gap-y-6 items-center justify-center">
+          <a href="#" class="flex items-center gap-4 rounded-lg border-2 border-black bg-[#0b7cff] px-9 py-4 text-3xl font-semibold uppercase tracking-tight text-white shadow-[inset_0_0_0_0.125rem_rgba(255,255,255,0.75),0_0.375rem_0_#000] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-y-[0.375rem] hover:shadow-[inset_0_0_0_0.125rem_rgba(255,255,255,0.75),0_0_0_#000] hero-anim-cta-1">
+            Start for free
+            <i data-lucide="arrow-right" class="h-8 w-8"></i>
+          </a>
+          <a href="#product-preview" class="group relative inline-flex items-center justify-center rounded-md border-2 border-transparent bg-white px-6 py-3 sm:px-9 sm:py-4 text-2xl sm:text-3xl font-light uppercase tracking-tight shadow-sm text-black hero-anim-cta-2 hero-anim-border">
+            <span class="relative z-10">View templates</span>
+            <svg class="absolute -inset-[1px] h-[calc(100%+2px)] w-[calc(100%+2px)] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100%" height="100%" rx="6" fill="none" stroke="black" stroke-width="2"></rect>
+            </svg>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="relative mx-auto max-w-[105rem] px-5 py-20 sm:px-8 lg:px-12">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-16 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px;">
+        <svg class="pointer-events-none absolute left-[9%] top-24 hidden h-28 w-28 lg:block" viewBox="0 0 120 120" fill="none">
+          <path d="M72 10C35 11 22 45 46 73" stroke="black" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 7"></path>
+          <path d="M33 72L49 76L45 58" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <svg class="pointer-events-none absolute right-[12%] top-36 hidden h-20 w-20 lg:block" viewBox="0 0 90 90" fill="none">
+          <path d="M76 25C58 60 31 57 16 45" stroke="black" stroke-width="3" stroke-linecap="round"></path>
+          <path d="M20 60L14 43L31 48" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div class="absolute right-[9%] top-20 hidden rotate-[8deg] bg-[#ffb9c8] px-7 py-6 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)] lg:block">
+          <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[5deg] bg-black/15"></div>
+          <i data-lucide="sparkles" class="h-10 w-10"></i>
+        </div>
+        <div class="mb-12 flex flex-col items-center text-center">
+          <div class="mb-5 flex items-center gap-4 text-[#0b7cff]">
+            <span class="h-4 w-8 rounded-full border-t-2 border-[#0b7cff]"></span>
+            <p class="text-2xl uppercase tracking-tight">Features</p>
+            <span class="h-4 w-8 rounded-full border-t-2 border-[#0b7cff]"></span>
+          </div>
+          <h2 class="max-w-4xl text-6xl leading-[0.95] tracking-tight [font-family:Chewy,cursive] sm:text-7xl md:text-8xl">
+            Everything you need to<br class="hidden md:block">turn ideas into action.
+          </h2>
+          <p class="mt-6 max-w-3xl text-2xl leading-tight tracking-tight md:text-3xl">
+            Brainstorm freely, collaborate in real time, use powerful templates,<br class="hidden md:block">
+            and present your work with <span class="relative inline-block">clarity<span class="absolute -bottom-1 left-0 h-1 w-full rounded-full bg-[#0b7cff]"></span></span> and <span class="relative inline-block">impact<span class="absolute -bottom-1 left-0 h-1 w-full rounded-full bg-[#0b7cff]"></span></span>.
+          </p>
+        </div>
+
+        <style>
+          @keyframes aura-float { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-6px) rotate(var(--r, 0deg)); } }
+          @keyframes aura-draw { 0% { stroke-dasharray: 200; stroke-dashoffset: 200; } 40%, 100% { stroke-dasharray: 200; stroke-dashoffset: 0; } }
+          @keyframes aura-pulse-soft { 0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 0 rgba(11,124,255,0); } 50% { transform: translateX(-50%) scale(1.02); box-shadow: 0 0 15px rgba(11,124,255,0.2); } }
+          @keyframes aura-bounce-tiny { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+          @keyframes aura-float-cursor { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, 6px); } }
+          .aura-anim-float { animation: aura-float 4s ease-in-out infinite; }
+          .aura-anim-float-d1 { animation: aura-float 4.5s ease-in-out infinite 0.5s; }
+          .aura-anim-float-d2 { animation: aura-float 5s ease-in-out infinite 1s; }
+          .aura-anim-draw { animation: aura-draw 4s ease-in-out infinite alternate; }
+          .aura-anim-pulse-soft { animation: aura-pulse-soft 3s ease-in-out infinite; }
+          .aura-anim-float-cursor { animation: aura-float-cursor 2.5s ease-in-out infinite; }
+          .aura-anim-bounce-tiny { animation: aura-bounce-tiny 3s ease-in-out infinite; }
+          .aura-anim-bounce-tiny-d1 { animation: aura-bounce-tiny 3s ease-in-out infinite 0.2s; }
+          .aura-anim-bounce-tiny-d2 { animation: aura-bounce-tiny 3s ease-in-out infinite 0.4s; }
+          .aura-anim-bounce-tiny-d3 { animation: aura-bounce-tiny 3s ease-in-out infinite 0.6s; }
+        </style>
+
+        <div class="grid gap-4 lg:grid-cols-3 gap-x-4 gap-y-4">
+          <!-- Feature Card 1 -->
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#d7ecff] p-3 text-[#0b7cff]"><i data-lucide="infinity" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl font-medium tracking-tight">Infinite whiteboards</h3>
+                <p class="mt-1 text-xl leading-tight">Start with a blank canvas and take your ideas anywhere. No limits, no boundaries.</p>
+              </div>
+            </div>
+            <div class="relative h-36 rounded-lg border border-black/10 bg-white p-4" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="absolute left-8 top-7 bg-[#93f4be] px-4 py-3 text-lg shadow-sm aura-anim-float" style="--r: 4deg;">New<br>ideas</div>
+              <div class="absolute right-8 top-14 bg-[#ffe978] px-4 py-3 text-lg shadow-sm aura-anim-float-d1" style="--r: -2deg;">User<br>flow</div>
+              <div class="absolute bottom-4 right-4 bg-[#9fe5ff] px-4 py-3 text-lg shadow-sm aura-anim-float-d2" style="--r: 1deg;">Next<br>steps</div>
+              <svg class="absolute left-24 top-8 h-20 w-32" viewBox="0 0 130 80" fill="none">
+                <path class="aura-anim-draw" d="M10 45C38 16 79 21 104 45" stroke="black" stroke-width="2.5" stroke-linecap="round"></path>
+                <path class="aura-anim-draw" style="animation-delay: 0.5s;" d="M96 31L107 47L88 48" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Feature Card 2 -->
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#c9ffd9] p-3 text-[#119c4a]"><i data-lucide="users-round" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl font-medium tracking-tight">Real-time collaboration</h3>
+                <p class="mt-1 text-xl leading-tight">Work together seamlessly with your team, wherever you are.</p>
+              </div>
+            </div>
+            <div class="relative h-36 rounded-lg border border-black/10 bg-white p-4" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <span class="absolute left-5 top-4 rounded bg-[#40d66f] px-3 py-1 text-lg text-black aura-anim-bounce-tiny">Alex</span>
+              <svg class="absolute left-16 top-10 h-7 w-7 text-[#119c4a] aura-anim-float-cursor" viewBox="0 0 28 28" fill="none">
+                <path d="M5 3L21 16L13 18L10 25L5 3Z" fill="currentColor" stroke="black" stroke-width="1.6" stroke-linejoin="round"></path>
+              </svg>
+              <div class="absolute left-1/2 top-8 flex h-20 w-44 items-center justify-center rounded-[50%] border-2 border-[#0b7cff] text-2xl aura-anim-pulse-soft">Let's build<br>this!</div>
+              <span class="absolute bottom-4 left-6 rounded bg-[#c7a4ff] px-3 py-1 text-lg aura-anim-bounce-tiny-d1">Sam</span>
+              <span class="absolute bottom-3 right-6 rounded bg-[#ffe978] px-3 py-1 text-lg aura-anim-bounce-tiny-d2">Taylor</span>
+            </div>
+          </article>
+
+          <!-- Feature Card 3 -->
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#e7d8ff] p-3 text-[#6a38ff]"><i data-lucide="layout-grid" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl font-medium tracking-tight">Ready-made templates</h3>
+                <p class="mt-1 text-xl leading-tight">Jumpstart your projects with professionally designed templates for any use case.</p>
+              </div>
+            </div>
+            <div class="mb-3 flex flex-wrap gap-2 text-lg">
+              <span class="rounded-full bg-[#0b7cff] px-3 py-1 text-white">All</span>
+              <span class="rounded-full border border-black/20 px-3 py-1">Brainstorming</span>
+              <span class="rounded-full border border-black/20 px-3 py-1">Planning</span>
+              <span class="rounded-full border border-black/20 px-3 py-1">Research</span>
+            </div>
+            <div class="grid grid-cols-4 gap-3">
+              <div class="rounded-lg border-2 border-[#0b7cff] p-3 text-center text-lg aura-anim-bounce-tiny"><i data-lucide="git-fork" class="mx-auto mb-2 h-8 w-8"></i>Brainstorm</div>
+              <div class="rounded-lg border border-black/20 p-3 text-center text-lg aura-anim-bounce-tiny-d1"><i data-lucide="list-checks" class="mx-auto mb-2 h-8 w-8"></i>Plan</div>
+              <div class="rounded-lg border border-black/20 p-3 text-center text-lg aura-anim-bounce-tiny-d2"><i data-lucide="circle-user-round" class="mx-auto mb-2 h-8 w-8"></i>Research</div>
+              <div class="rounded-lg border border-black/20 p-3 text-center text-lg aura-anim-bounce-tiny-d3"><i data-lucide="pencil-ruler" class="mx-auto mb-2 h-8 w-8"></i>Sprint</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-3 mt-4 gap-x-4 gap-y-4">
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#ffd6dc] p-3 text-[#db2f45]"><i data-lucide="presentation" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl tracking-tight">Present ideas beautifully</h3>
+                <p class="mt-1 text-xl leading-tight">Turn your boards into stunning presentations with one click.</p>
+              </div>
+            </div>
+            <div class="relative h-36 rounded-lg border border-black/10 bg-white p-4 flex items-center justify-center overflow-hidden" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="rotate-[2deg] rounded-lg bg-[#ffd6dc] px-6 py-4 text-xl shadow-sm text-center border border-black/5">Q1 Roadmap<br><span class="text-[#db2f45] text-2xl">✧</span></div>
+            </div>
+          </article>
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#d7ecff] p-3 text-[#0b7cff]"><i data-lucide="message-square" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl tracking-tight">Comments and feedback</h3>
+                <p class="mt-1 text-xl leading-tight">Leave comments, mention teammates, and keep feedback in context.</p>
+              </div>
+            </div>
+            <div class="relative h-36 rounded-lg border border-black/10 bg-white p-4 flex flex-col items-center justify-center gap-2 overflow-hidden" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="w-[90%] max-w-[220px] translate-x-[-12px] rounded-lg border border-black/15 bg-white px-4 py-2 text-lg shadow-sm">Great point!</div>
+              <div class="w-[90%] max-w-[220px] translate-x-[12px] rounded-lg border border-black/15 bg-[#d7ecff] px-4 py-2 text-lg shadow-sm">Let's explore this.</div>
+            </div>
+          </article>
+          <article class="rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <div class="rounded-lg bg-[#ffe0a3] p-3 text-[#d08a00]"><i data-lucide="workflow" class="h-7 w-7"></i></div>
+              <div>
+                <h3 class="text-2xl tracking-tight">Organize notes and sections</h3>
+                <p class="mt-1 text-xl leading-tight">Keep everything structured with sections, frames, and color-coded sticky notes.</p>
+              </div>
+            </div>
+            <div class="relative h-36 rounded-lg border border-black/10 bg-white p-4 flex items-center justify-center overflow-hidden" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="w-[85%] max-w-[180px] rounded-lg border border-black/15 bg-white p-3 shadow-sm">
+                <p class="mb-2 border-b border-black/10 pb-1 text-base text-gray-700">Project plan</p>
+                <div class="space-y-1 text-base">
+                  <p><span class="text-[#93f4be] mr-1">■</span>Research</p>
+                  <p><span class="text-[#ffe978] mr-1">■</span>Ideation</p>
+                  <p><span class="text-[#9fe5ff] mr-1">■</span>Action items</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT PREVIEW SECTION -->
+    <section class="relative mx-auto max-w-[105rem] px-5 pb-24 sm:px-8 lg:px-12" id="product-preview">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-16 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px">
+        <style>
+          @keyframes pop1 { 0%, 4% { transform: scale(0); opacity: 0; } 6% { transform: scale(1.1); opacity: 1; } 8%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes pop2 { 0%, 8% { transform: scale(0); opacity: 0; } 10% { transform: scale(1.1); opacity: 1; } 12%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes pop3 { 0%, 12% { transform: scale(0); opacity: 0; } 14% { transform: scale(1.1); opacity: 1; } 16%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes drawStroke1 { 0%, 16% { stroke-dashoffset: 200; opacity: 0; } 17% { opacity: 1; stroke-dashoffset: 200; } 26%, 85% { stroke-dashoffset: 0; opacity: 1; } 90%, 100% { opacity: 0; stroke-dashoffset: 0; } }
+          @keyframes pop4 { 0%, 26% { transform: scale(0); opacity: 0; } 28% { transform: scale(1.05); opacity: 1; } 30%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes cursorSam { 0%, 28% { transform: translate(30px, 40px); opacity: 0; } 30% { opacity: 1; transform: translate(20px, 30px); } 38%, 85% { transform: translate(0px, 0px); opacity: 1; } 90%, 100% { opacity: 0; } }
+          @keyframes pop5 { 0%, 40% { transform: scale(0); opacity: 0; } 42% { transform: scale(1.05); opacity: 1; } 44%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes drawStroke2 { 0%, 46% { stroke-dashoffset: 200; opacity: 0; } 47% { opacity: 1; stroke-dashoffset: 200; } 56%, 85% { stroke-dashoffset: 0; opacity: 1; } 90%, 100% { opacity: 0; stroke-dashoffset: 0; } }
+          @keyframes pop6 { 0%, 58% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 62%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes pop7 { 0%, 68% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 72%, 85% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(0); opacity: 0; } }
+          @keyframes typeText { 0%, 72% { max-width: 0; border-right-color: transparent; } 73%, 75% { max-width: 0; border-right-color: black; } 80% { max-width: 250px; border-right-color: black; } 82%, 85% { max-width: 250px; border-right-color: transparent; opacity: 1; } 90%, 100% { max-width: 250px; opacity: 0; border-right-color: transparent; } }
+          @keyframes fadeIn { 0%, 80% { opacity: 0; } 82%, 85% { opacity: 1; } 90%, 100% { opacity: 0; } }
+          @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+          @keyframes floatOffset { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(3px); } }
+          @keyframes mainCursor { 0%, 4% { transform: translate(50px, 300px); opacity: 0; } 5% { opacity: 1; transform: translate(50px, 300px); } 10% { transform: translate(80px, 60px); } 16% { transform: translate(250px, 120px); } 26% { transform: translate(500px, 80px); } 40% { transform: translate(150px, 350px); } 58% { transform: translate(550px, 350px); } 70% { transform: translate(650px, 300px); } 85% { opacity: 1; transform: translate(650px, 300px); } 88%, 100% { opacity: 0; transform: translate(650px, 300px); } }
+        </style>
+
+        <div class="absolute left-[10%] top-20 hidden rotate-[-9deg] bg-[#93f4be] px-7 py-5 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)] lg:block">
+          <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[-2deg] bg-black/15"></div>
+          <div class="flex items-center gap-3 text-xl">
+            <i data-lucide="users-round" class="h-7 w-7"></i>
+            <span>Everything<br>together.</span>
+          </div>
+        </div>
+        <div class="absolute right-[12%] top-20 hidden rotate-[7deg] bg-[#ffb9c8] px-7 py-6 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)] lg:block">
+          <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[5deg] bg-black/15"></div>
+          <i data-lucide="sparkles" class="h-10 w-10"></i>
+        </div>
+        <div class="mb-10 flex flex-col items-center text-center">
+          <div class="mb-5 flex items-center gap-4 text-[#0b7cff]">
+            <span class="h-4 w-8 rounded-full border-t-2 border-[#0b7cff]"></span>
+            <p class="text-2xl uppercase tracking-tight">Product preview</p>
+            <span class="h-4 w-8 rounded-full border-t-2 border-[#0b7cff]"></span>
+          </div>
+          <h2 class="text-6xl leading-none tracking-tight [font-family:Chewy,cursive] sm:text-7xl md:text-8xl">See Canvas in action.</h2>
+          <span class="mt-3 h-1.5 w-60 rotate-[-2deg] rounded-full bg-[#0b7cff]"></span>
+        </div>
+
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-2xl border-2 border-black bg-white shadow-[0_1.5rem_3rem_rgba(0,0,0,0.18)]">
+          <div class="flex items-center gap-4 border-b-2 border-black/20 px-5 py-3 text-xl">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-black [font-family:Chewy,cursive]">C</div>
+            <i data-lucide="menu" class="h-5 w-5"></i>
+            <span>Project Launch</span>
+            <i data-lucide="chevron-down" class="h-5 w-5"></i>
+            <div class="ml-4 hidden items-center gap-4 text-black/70 sm:flex">
+              <i data-lucide="undo-2" class="h-5 w-5"></i>
+              <i data-lucide="redo-2" class="h-5 w-5"></i>
+              <i data-lucide="refresh-cw" class="h-5 w-5"></i>
+              <i data-lucide="layout-grid" class="h-5 w-5"></i>
+              <i data-lucide="users-round" class="h-5 w-5"></i>
+            </div>
+            <div class="flex gap-2 ml-auto gap-x-2 gap-y-2 items-center">
+              <span class="hidden h-8 w-8 items-center justify-center rounded-full bg-[#ffbd91] text-lg sm:flex">A</span>
+              <span class="hidden h-8 w-8 items-center justify-center rounded-full bg-[#93f4be] text-lg sm:flex">S</span>
+              <span class="hidden h-8 w-8 items-center justify-center rounded-full bg-[#ffe978] text-lg sm:flex">+3</span>
+              <button class="rounded bg-[#0b7cff] px-4 py-2 text-lg text-white">Share</button>
+              ...
+            </div>
+          </div>
+          <div class="flex min-h-[35rem]">
+            <aside class="hidden w-32 shrink-0 border-r-2 border-black/15 p-4 text-lg sm:block">
+              <nav class="space-y-3">
+                <a class="flex items-center gap-2 rounded bg-[#d7ecff] px-2 py-2 text-[#0b7cff]"><i data-lucide="square" class="h-5 w-5"></i>Canvas</a>
+                <a class="flex items-center gap-2 px-2 py-2"><i data-lucide="layout-grid" class="h-5 w-5"></i>Templates</a>
+                <a class="flex items-center gap-2 px-2 py-2"><i data-lucide="folder" class="h-5 w-5"></i>Projects</a>
+                <a class="flex items-center gap-2 px-2 py-2"><i data-lucide="message-square" class="h-5 w-5"></i>Comments</a>
+                <a class="flex items-center gap-2 px-2 py-2"><i data-lucide="check-square" class="h-5 w-5"></i>Tasks</a>
+                <a class="flex items-center gap-2 px-2 py-2"><i data-lucide="presentation" class="h-5 w-5"></i>Present</a>
+              </nav>
+              <a class="mt-8 flex items-center gap-2 px-2 py-2 text-red-500"><i data-lucide="trash-2" class="h-5 w-5"></i>Trash</a>
+            </aside>
+            <div class="flex flex-1 flex-col bg-[#fafaf8] p-8">
+              <div class="mb-10 flex gap-4 text-black/60">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-black text-white shadow-md"><i data-lucide="mouse-pointer-2" class="h-5 w-5"></i></div>
+                <span class="flex h-10 w-10 items-center justify-center text-2xl [font-family:Arial,sans-serif]">T</span>
+                <span class="flex h-10 w-10 items-center justify-center"><i data-lucide="square" class="h-5 w-5"></i></span>
+                <span class="flex h-10 w-10 items-center justify-center"><i data-lucide="pencil" class="h-5 w-5"></i></span>
+                <span class="flex h-10 w-10 items-center justify-center"><i data-lucide="ellipsis" class="h-5 w-5"></i></span>
+              </div>
+              <div class="relative mx-auto grid max-w-3xl gap-10 md:grid-cols-2">
+                <div class="absolute inset-0 z-50 pointer-events-none">
+                  <div style="animation: mainCursor 12s ease-in-out infinite; width: 32px; height: 32px; position: absolute; top: 0; left: 0;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2" class="drop-shadow-lg">
+                      <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="relative min-h-48">
+                  <h3 class="mb-4 text-2xl uppercase tracking-tight">1. Ideas</h3>
+                  <div class="inline-block" style="animation: pop1 12s infinite; transform-origin: center;">
+                    <div style="animation: float 3s ease-in-out infinite;" class=""><div class="inline-block rotate-[-3deg] bg-[#93f4be] px-5 py-4 text-xl shadow-sm">Improve<br>onboarding</div></div>
+                  </div>
+                  <div class="inline-block ml-5" style="animation: pop2 12s infinite; transform-origin: center;">
+                    <div style="animation: floatOffset 3.5s ease-in-out infinite;"><div class="inline-block rotate-[3deg] bg-[#ffe978] px-5 py-4 text-xl shadow-sm">AI-powered<br>search</div></div>
+                  </div>
+                  <div class="inline-block ml-20 mt-3" style="animation: pop3 12s infinite; transform-origin: center;">
+                    <div style="animation: float 4s ease-in-out infinite;"><div class="inline-block rotate-[-2deg] bg-[#9fe5ff] px-5 py-4 text-xl shadow-sm">Team<br>analytics</div></div>
+                  </div>
+                  <svg class="absolute right-4 top-20 h-16 w-24 pointer-events-none" viewBox="0 0 100 70" fill="none">
+                    <path d="M9 34C35 18 61 20 84 35" stroke="black" stroke-width="2.5" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawStroke1 12s infinite;"></path>
+                    <path d="M75 21L87 37L68 39" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawStroke1 12s infinite; animation-delay: 0.2s;"></path>
+                  </svg>
+                </div>
+                <div class="relative min-h-48">
+                  <h3 class="mb-4 text-2xl uppercase tracking-tight">2. Plan</h3>
+                  <div style="animation: pop4 12s infinite; transform-origin: left center;" class="inline-block">
+                    <div class="flex items-center gap-2 rounded-lg border-2 border-[#0b7cff] bg-white p-4 shadow-sm">
+                      <div class="bg-[#c7a4ff] px-4 py-6 text-xl">Research</div>
+                      <span class="h-0.5 w-6 bg-black"></span>
+                      <div class="bg-[#d7ecff] px-4 py-6 text-xl">Design</div>
+                      <span class="h-0.5 w-6 bg-black"></span>
+                      <div class="bg-[#93f4be] px-4 py-6 text-xl">Build</div>
+                    </div>
+                  </div>
+                  <div class="absolute right-[-1rem] top-24 z-10" style="animation: cursorSam 12s infinite;">
+                    <svg class="absolute right-6 top-0 h-8 w-8 text-[#c782ff]" viewBox="0 0 28 28" fill="none"><path d="M5 3L21 16L13 18L10 25L5 3Z" fill="currentColor" stroke="black" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+                    <span class="absolute right-0 top-8 rounded bg-[#c7a4ff] px-3 py-1 text-lg shadow-sm">Sam</span>
+                  </div>
+                </div>
+                <div class="relative min-h-48">
+                  <h3 class="mb-4 text-2xl uppercase tracking-tight">3. Next steps</h3>
+                  <div class="relative w-max" style="animation: pop5 12s infinite; transform-origin: top left;">
+                    <div class="w-60 rounded-lg border border-black/20 bg-white p-4 text-xl shadow-sm">
+                      <p>☑ User interviews</p>
+                      <p>☑ Wireframes</p>
+                      <p>☐ Prototype</p>
+                      <p>☐ Test with users</p>
+                    </div>
+                    <span class="absolute -bottom-4 right-8 rounded bg-[#ffe978] px-3 py-1 text-lg shadow-sm">Taylor</span>
+                  </div>
+                  <svg class="absolute right-10 top-16 h-16 w-24 pointer-events-none" viewBox="0 0 100 70" fill="none">
+                    <path d="M9 34C35 55 61 51 84 35" stroke="black" stroke-width="2.5" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawStroke2 12s infinite;"></path>
+                    <path d="M69 31L87 35L77 50" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawStroke2 12s infinite; animation-delay: 0.2s;"></path>
+                  </svg>
+                </div>
+                <div class="relative min-h-48">
+                  <h3 class="mb-4 text-2xl uppercase tracking-tight">4. Launch</h3>
+                  <div class="relative w-max" style="animation: pop6 12s infinite; transform-origin: center;">
+                    <div style="animation: floatOffset 4s ease-in-out infinite;">
+                      <div class="flex h-32 w-56 items-center justify-center rounded-[50%] border-2 border-[#0b7cff] bg-white text-2xl text-center shadow-sm">Let's ship<br>this! ✨</div>
+                    </div>
+                    <span class="absolute -bottom-2 right-8 rounded bg-[#40d66f] px-3 py-1 text-lg shadow-sm">Alex</span>
+                  </div>
+                  <div class="absolute right-0 top-16 rounded-lg border border-black/15 bg-white px-4 py-3 text-xl shadow-sm z-10" style="animation: pop7 12s infinite; transform-origin: bottom right;">
+                    <div style="display: inline-block; overflow: hidden; white-space: nowrap; border-right: 2px solid transparent; animation: typeText 12s infinite; vertical-align: bottom;">Love this flow! 🚀</div>
+                    <br>
+                    <span class="text-lg text-black/60" style="animation: fadeIn 12s infinite;">10:24 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="hidden w-64 shrink-0 border-l-2 border-black/15 p-4 lg:block">
+              <div class="mb-4 flex gap-4 text-lg">
+                <span class="text-[#0b7cff] underline decoration-[#0b7cff] decoration-2 underline-offset-4">Templates</span>
+                <span>Comments</span>
+                <span>Tasks</span>
+              </div>
+              <div class="mb-6 flex items-center justify-between text-lg"><span>Start from a template</span><a class="text-[#0b7cff]">See all</a></div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-lg border border-black/15 p-3 text-center text-lg"><i data-lucide="git-fork" class="mx-auto h-7 w-7"></i>Project plan</div>
+                <div class="rounded-lg border border-black/15 p-3 text-center text-lg"><i data-lucide="sticky-note" class="mx-auto h-7 w-7"></i>Brainstorm</div>
+                <div class="rounded-lg border border-black/15 p-3 text-center text-lg"><i data-lucide="list-checks" class="mx-auto h-7 w-7"></i>Research plan</div>
+                <div class="rounded-lg border border-black/15 p-3 text-center text-lg"><i data-lucide="pencil-ruler" class="mx-auto h-7 w-7"></i>Design sprint</div>
+              </div>
+              <div class="mt-8 flex items-center justify-between text-lg"><span>Comments</span><a class="text-[#0b7cff]">See all</a></div>
+              <div class="mt-4 space-y-4 text-lg">
+                <div class="flex gap-3">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ffbd91]">A</span>
+                  <p>Great point! Let's explore this further.<br><span class="text-black/50">10:24 AM</span></p>
+                </div>
+                <div class="flex gap-3">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#93f4be]">S</span>
+                  <p>I'll add more data here.<br><span class="text-black/50">10:31 AM</span></p>
+                </div>
+              </div>
+              <div class="mt-8 rounded-lg border border-black/15 px-4 py-3 text-black/40">Add a comment...</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="relative mx-auto max-w-[105rem] px-5 pb-24 sm:px-8 lg:px-12">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-16 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px">
+        <style>
+          @keyframes numberPop { 0%, 100% { transform: scale(1); opacity: 0.8; } 5% { transform: scale(1.1); opacity: 1; } 10%, 95% { transform: scale(1); opacity: 1; } }
+          @keyframes titleFade { 0%, 100% { opacity: 0; transform: translateY(10px); } 10%, 95% { opacity: 1; transform: translateY(0); } }
+          @keyframes noteBounceFloat1 { 0%, 100% { transform: scale(0.8) rotate(4deg) translateY(10px); opacity: 0; } 10% { transform: scale(1.05) rotate(4deg) translateY(0); opacity: 1; } 15%, 95% { transform: scale(1) rotate(4deg) translateY(0); opacity: 1; } 55% { transform: scale(1) rotate(4deg) translateY(-8px); opacity: 1; } }
+          @keyframes noteBounceFloat2 { 0%, 100% { transform: scale(0.8) rotate(-2deg) translateY(10px); opacity: 0; } 15% { transform: scale(1.05) rotate(-2deg) translateY(0); opacity: 1; } 20%, 95% { transform: scale(1) rotate(-2deg) translateY(0); opacity: 1; } 60% { transform: scale(1) rotate(-2deg) translateY(-6px); opacity: 1; } }
+          @keyframes noteBounceFloat3 { 0%, 100% { transform: scale(0.8) rotate(2deg) translateY(10px); opacity: 0; } 20% { transform: scale(1.05) rotate(2deg) translateY(0); opacity: 1; } 25%, 95% { transform: scale(1) rotate(2deg) translateY(0); opacity: 1; } 65% { transform: scale(1) rotate(2deg) translateY(-10px); opacity: 1; } }
+          @keyframes typeWriter { 0%, 15% { clip-path: inset(0 100% 0 0); } 30%, 95% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
+          @keyframes drawStroke { 0%, 20% { stroke-dasharray: 200; stroke-dashoffset: 200; opacity: 0; } 35%, 95% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 200; opacity: 0; } }
+          @keyframes fadeArrowHead { 0%, 30% { opacity: 0; } 35%, 95% { opacity: 1; } 100% { opacity: 0; } }
+          @keyframes cursorMove1 { 0%, 100% { transform: translate(-20px, -15px); opacity: 0; } 15%, 95% { transform: translate(0, 0); opacity: 1; } 55% { transform: translate(4px, -6px); opacity: 1; } }
+          @keyframes cursorMove2 { 0%, 100% { transform: translate(20px, 15px); opacity: 0; } 20%, 95% { transform: translate(0, 0); opacity: 1; } 60% { transform: translate(-4px, -6px); opacity: 1; } }
+          @keyframes popCard { 0%, 100% { opacity: 0; transform: translateY(15px) scale(0.95); } 25%, 95% { opacity: 1; transform: translateY(0) scale(1); } 60% { opacity: 1; transform: translateY(-4px) scale(1); } }
+          @keyframes popCardRotate { 0%, 100% { opacity: 0; transform: translateY(15px) scale(0.95) rotate(-4deg); } 30%, 95% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); } 65% { opacity: 1; transform: translateY(-4px) scale(1) rotate(0deg); } }
+          @keyframes popTag { 0%, 100% { opacity: 0; transform: scale(0.8); } 20%, 95% { opacity: 1; transform: scale(1); } }
+          @keyframes circlePop { 0%, 100% { opacity: 0; transform: translateX(-50%) scale(0.8); } 25%, 95% { opacity: 1; transform: translateX(-50%) scale(1); } }
+          @keyframes slideList { 0%, 100% { opacity: 0; transform: translateX(-15px); } 15%, 95% { opacity: 1; transform: translateX(0); } }
+          @keyframes popCol1 { 0%, 100% { opacity: 0; transform: translateY(20px); } 15%, 95% { opacity: 1; transform: translateY(0); } }
+          @keyframes popCol2 { 0%, 100% { opacity: 0; transform: translateY(20px); } 20%, 95% { opacity: 1; transform: translateY(0); } }
+          @keyframes popCol3 { 0%, 100% { opacity: 0; transform: translateY(20px); } 25%, 95% { opacity: 1; transform: translateY(0); } }
+          @keyframes pulseArrow { 0%, 100% { opacity: 0.3; transform: translateX(0) translateY(-50%); } 50% { opacity: 0.8; transform: translateX(8px) translateY(-50%); } }
+          @keyframes floatY { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(0, -8px); } }
+          @keyframes floatZ { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-3px, -6px); } }
+        </style>
+
+        <div class="pointer-events-none absolute left-[9%] top-24 hidden h-24 w-24 lg:block" style="animation: floatY 6s ease-in-out infinite;">
+          <svg viewBox="0 0 120 120" fill="none"><path d="M72 10C35 11 22 45 46 73" stroke="black" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 7"></path><path d="M33 72L49 76L45 58" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <div class="pointer-events-none absolute right-[11%] top-20 hidden lg:block" style="animation: floatZ 5s ease-in-out infinite;">
+          <div class="rotate-[5deg] bg-[#ffb9c8] px-8 py-7 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)]">
+            <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[4deg] bg-black/15"></div>
+            <i data-lucide="sparkles" class="h-11 w-11"></i>
+          </div>
+        </div>
+
+        <div class="mb-14 text-center">
+          <div class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/50 px-4 py-2 text-sm text-[#0b7cff] shadow-sm">
+            <i data-lucide="sparkles" class="h-4 w-4"></i>
+            How it works
+          </div>
+          <h2 class="mt-6 text-4xl tracking-tight lg:text-5xl">Go from messy ideas<br class="hidden sm:block">to clear action.</h2>
+          <p class="mx-auto mt-6 max-w-2xl text-xl text-black/60 leading-tight">Capture ideas, collaborate with your team, and turn every board<br class="hidden sm:block">into something actionable in just a few steps.</p>
+        </div>
+
+        <div class="relative grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <article class="relative rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <span class="rounded-lg border border-[#ffb9c8]/50 bg-[#ffe1e8] px-3 py-2 text-3xl text-[#ff507a]" style="animation: numberPop 8s infinite;">01</span>
+              <div style="animation: titleFade 8s infinite;">
+                <h3 class="text-2xl tracking-tight">Start with a canvas</h3>
+                <p class="mt-1 text-xl leading-tight">Open a blank board, drop sticky notes, sketch flows, and collect ideas freely.</p>
+              </div>
+            </div>
+            <div class="relative h-56 rounded-lg border border-black/10 bg-white p-4" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="absolute left-4 top-4 flex w-10 flex-col items-center gap-3 rounded-lg border border-black/10 bg-white py-3 shadow-sm" style="animation: slideList 8s infinite;">
+                <div class="h-4 w-4 rounded-full border-2 border-black/20"></div>
+                <div class="h-4 w-4 rounded-[3px] border-2 border-black/20"></div>
+                <div class="text-lg text-black/30">T</div>
+                <div class="h-4 w-4 rounded-[3px] bg-[#0b7cff]/20"></div>
+              </div>
+              <div class="absolute left-24 top-10"><div class="bg-[#ffb9c8] px-5 py-4 text-xl shadow-sm" style="animation: noteBounceFloat1 8s infinite;"><div style="animation: typeWriter 8s infinite;">New<br>idea</div></div></div>
+              <div class="absolute right-12 top-6"><div class="bg-[#ffe978] px-5 py-4 text-xl shadow-sm" style="animation: noteBounceFloat2 8s infinite;"><div style="animation: typeWriter 8s infinite;">User<br>flow</div></div></div>
+              <div class="absolute bottom-8 right-7"><div class="bg-[#9fe5ff] px-5 py-4 text-xl shadow-sm" style="animation: noteBounceFloat3 8s infinite;"><div style="animation: typeWriter 8s infinite;">Next<br>steps</div></div></div>
+              <svg class="absolute left-28 top-16 h-24 w-40" viewBox="0 0 160 100" fill="none">
+                <path d="M18 42C48 18 88 20 116 45" stroke="black" stroke-width="3" stroke-linecap="round" style="animation: drawStroke 8s infinite;"></path>
+                <path d="M105 30L120 47L98 49" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="animation: fadeArrowHead 8s infinite;"></path>
+                <path d="M120 70C90 92 50 88 24 62" stroke="black" stroke-width="3" stroke-linecap="round" style="animation: drawStroke 8s infinite; animation-delay: 0.4s;"></path>
+                <path d="M35 77L20 60L42 58" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="animation: fadeArrowHead 8s infinite; animation-delay: 0.4s;"></path>
+              </svg>
+            </div>
+          </article>
+
+          <div class="pointer-events-none absolute left-[31.5%] top-1/2 z-10 hidden text-black lg:block" style="animation: 4s ease-in-out 0s infinite normal none running pulseArrow;">
+            <i data-lucide="arrow-right" class="h-9 w-9"></i>
+          </div>
+
+          <article class="relative rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <span class="rounded-lg border border-[#6a38ff]/25 bg-[#e7d8ff] px-3 py-2 text-3xl text-[#6a38ff]" style="animation: numberPop 8s infinite;">02</span>
+              <div style="animation: titleFade 8s infinite;">
+                <h3 class="text-2xl tracking-tight">Collaborate in real time</h3>
+                <p class="mt-1 text-xl leading-tight">Invite teammates, leave comments, move ideas around, and build together instantly.</p>
+              </div>
+            </div>
+            <div class="relative h-56 rounded-lg border border-black/10 bg-white p-4" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <span class="absolute left-7 top-7 rounded bg-[#40d66f] px-3 py-1 text-lg" style="animation: popTag 8s infinite;">Alex</span>
+              <div class="absolute left-16 top-16">
+                <svg class="h-8 w-8 text-[#119c4a]" viewBox="0 0 28 28" fill="none" style="animation: cursorMove1 8s infinite;"><path d="M5 3L21 16L13 18L10 25L5 3Z" fill="currentColor" stroke="black" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+              </div>
+              <div class="absolute left-1/2 top-14 flex h-28 w-48 items-center justify-center rounded-[50%] border-2 border-[#0b7cff] text-center text-2xl" style="animation: circlePop 8s infinite;">Let's build<br>this!</div>
+              <div class="absolute right-10 top-8 rounded-lg border border-black/15 bg-white px-4 py-2 text-lg shadow-sm" style="animation: popCard 8s infinite;">Great idea!</div>
+              <span class="absolute bottom-7 left-9 rounded bg-[#c7a4ff] px-3 py-1 text-lg" style="animation: popTag 8s infinite; animation-delay: 0.2s;">Sam</span>
+              <span class="absolute bottom-7 right-9 rounded bg-[#ffe978] px-3 py-1 text-lg" style="animation: popTag 8s infinite; animation-delay: 0.4s;">Taylor</span>
+              <div class="absolute right-16 bottom-16">
+                <svg class="h-8 w-8 text-[#ffe978]" viewBox="0 0 28 28" fill="none" style="animation: cursorMove2 8s infinite;"><path d="M5 3L21 16L13 18L10 25L5 3Z" fill="currentColor" stroke="black" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+              </div>
+            </div>
+          </article>
+
+          <div class="pointer-events-none absolute right-[31.5%] top-1/2 z-10 hidden text-black lg:block" style="animation: 4s ease-in-out 2s infinite normal none running pulseArrow;">
+            <i data-lucide="arrow-right" class="h-9 w-9"></i>
+          </div>
+
+          <article class="relative rounded-xl border-2 border-black bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-start gap-4">
+              <span class="rounded-lg border border-[#0b7cff]/25 bg-[#d7ecff] px-3 py-2 text-3xl text-[#0b7cff]" style="animation: numberPop 8s infinite;">03</span>
+              <div style="animation: titleFade 8s infinite;">
+                <h3 class="text-2xl tracking-tight">Turn ideas into action</h3>
+                <p class="mt-1 text-xl leading-tight">Use templates, organize sections, and turn your board into a presentation or plan.</p>
+              </div>
+            </div>
+            <div class="relative h-56 rounded-lg border border-black/10 bg-white p-4" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="absolute left-4 top-5 space-y-3 text-lg" style="animation: slideList 8s infinite;">
+                <p class="text-[#6a38ff]">Templates</p>
+                <p>Project plan</p>
+                <p>User research</p>
+                <p>Design sprint</p>
+              </div>
+              <div class="absolute left-32 right-4 top-5 grid grid-cols-3 gap-3 text-center text-lg">
+                <div style="animation: popCol1 8s infinite;"><div class="rounded bg-[#93f4be] px-3 py-1">Goals</div><div class="mt-3 h-24 rounded border border-black/15 bg-white"></div></div>
+                <div style="animation: popCol2 8s infinite;"><div class="rounded bg-[#d7ecff] px-3 py-1">Plan</div><div class="mt-3 h-24 rounded border border-black/15 bg-white"></div></div>
+                <div style="animation: popCol3 8s infinite;"><div class="rounded bg-[#ffe0a3] px-3 py-1">Actions</div><div class="mt-3 h-24 rounded border border-black/15 bg-white"></div></div>
+              </div>
+              <div class="absolute bottom-5 right-16 rounded-lg border border-black/15 bg-white px-5 py-3 text-xl shadow-sm" style="animation: popCardRotate 8s infinite;">Project Plan<br><span class="text-[#0b7cff]">◔</span><span class="text-[#ffe978]">◕</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mx-auto mt-10 grid max-w-6xl overflow-hidden rounded-2xl border border-black/10 bg-white/80 shadow-sm md:grid-cols-3">
+          <div class="flex items-center gap-4 px-8 py-5">
+            <div class="rounded-lg bg-[#c9ffd9] p-3 text-[#119c4a]"><i data-lucide="lightbulb" class="h-8 w-8"></i></div>
+            <div><h3 class="text-2xl tracking-tight">Brainstorm</h3><p class="text-lg leading-tight">Capture every idea and see the big picture come to life.</p></div>
+          </div>
+          <div class="flex items-center gap-4 border-y border-black/10 px-8 py-5 md:border-x md:border-y-0">
+            <div class="rounded-lg bg-[#e7d8ff] p-3 text-[#6a38ff]"><i data-lucide="users-round" class="h-8 w-8"></i></div>
+            <div><h3 class="text-2xl tracking-tight">Align</h3><p class="text-lg leading-tight">Co-create with your team and stay on the same page.</p></div>
+          </div>
+          <div class="flex items-center gap-4 px-8 py-5">
+            <div class="rounded-lg bg-[#ffe0a3] p-3 text-[#d08a00]"><i data-lucide="presentation" class="h-8 w-8"></i></div>
+            <div><h3 class="text-2xl tracking-tight">Present</h3><p class="text-lg leading-tight">Turn boards into polished plans and share with confidence.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEMPLATES SECTION -->
+    <section id="templates" class="relative mx-auto max-w-[105rem] px-5 pb-24 sm:px-8 lg:px-12">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-16 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px">
+        <div class="pointer-events-none absolute left-[9%] top-20 hidden rotate-[-8deg] bg-[#93f4be] px-8 py-7 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)] lg:block">
+          <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[-2deg] bg-black/15"></div>
+          <i data-lucide="lightbulb" class="h-11 w-11"></i>
+        </div>
+        <div class="pointer-events-none absolute right-[10%] top-24 hidden rotate-[8deg] bg-[#ffb9c8] px-8 py-7 shadow-[0_1rem_2rem_rgba(0,0,0,0.12)] lg:block">
+          <div class="absolute left-1/2 top-[-0.9rem] h-5 w-14 -translate-x-1/2 rotate-[4deg] bg-black/15"></div>
+          <i data-lucide="star" class="h-11 w-11"></i>
+        </div>
+
+        <div class="mb-10 flex flex-col items-center text-center">
+          <div class="mb-4 flex items-center gap-3 text-[#0b7cff]">
+            <span class="h-4 w-7 rounded-full border-t-2 border-[#0b7cff]"></span>
+            <p class="text-2xl uppercase tracking-tight">Templates</p>
+            <span class="h-4 w-7 rounded-full border-t-2 border-[#0b7cff]"></span>
+          </div>
+          <h2 class="max-w-4xl text-6xl leading-[0.95] tracking-tight [font-family:Chewy,cursive] sm:text-7xl md:text-8xl">Browse templates<br class="hidden sm:block">your team will actually use.</h2>
+          <span class="mt-3 h-1.5 w-60 rotate-[-2deg] rounded-full bg-[#0b7cff]"></span>
+          <p class="mt-5 max-w-3xl text-2xl leading-tight tracking-tight">Explore ready-made boards for brainstorming, planning, research, workshops, and presentations.</p>
+        </div>
+
+        <div class="mb-8 flex flex-wrap items-center justify-center gap-3 text-lg">
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Popular <i data-lucide="chevron-down" class="ml-2 inline h-4 w-4"></i></button>
+          <button class="rounded-full bg-[#d7ecff] px-6 py-2 text-[#0b7cff] shadow-sm">Discover</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Brainstorming</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Planning</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Research</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Design Sprint</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm">Workshops</button>
+          <button class="rounded-full border border-black/15 bg-white px-6 py-2 shadow-sm"><i data-lucide="sliders-horizontal" class="mr-2 inline h-4 w-4"></i>Filters</button>
+        </div>
+
+        <div class="grid lg:grid-cols-3 py-6 gap-x-6 gap-y-6">
+          <!-- Template 1 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-white p-5" style="background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mx-auto mb-5 w-fit rotate-[2deg] rounded bg-[#93f4be] px-7 py-2 text-xl">BIG IDEA</div>
+              <div class="grid grid-cols-5 gap-4 px-5">
+                <span class="h-10 rounded bg-[#c9ffd9]"></span><span class="h-10 rounded bg-[#d7ecff]"></span><span class="h-10 rounded bg-[#e7d8ff]"></span><span class="h-10 rounded bg-[#ffe978]"></span><span class="h-10 rounded bg-[#ffd6dc]"></span>
+                <span class="h-10 rounded bg-[#93f4be]"></span><span class="h-10 rounded bg-[#c7a4ff]"></span><span class="h-10 rounded bg-[#9fe5ff]"></span><span class="h-10 rounded bg-[#ffe0a3]"></span><span class="h-10 rounded bg-[#ffb9c8]"></span>
+              </div>
+              <div class="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-black bg-white"><i data-lucide="users-round" class="h-8 w-8"></i></div>
+              <svg class="absolute left-10 top-10 h-20 w-28" viewBox="0 0 110 80" fill="none"><path d="M95 14C58 7 28 25 15 56" stroke="black" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 6"></path><path d="M22 45L14 58L31 58" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#c9ffd9] p-2 text-[#119c4a]"><i data-lucide="users-round" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">Brainstorm board</h3><p class="text-lg text-black/60">Canvas Studio <span class="text-[#0b7cff]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#ffd6dc] px-3 py-1 text-lg text-[#db2f45]">Popular</span>
+              <span class="rounded-full bg-[#c9ffd9] px-3 py-1 text-lg text-[#119c4a]">Free</span>
+            </div>
+          </article>
+
+          <!-- Template 2 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-[#f7fbff] p-5" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mb-5 text-center text-xl uppercase text-[#0b7cff]">Project roadmap</div>
+              <div class="grid grid-cols-4 gap-3 text-center text-lg">
+                <span class="rounded bg-[#c9ffd9] py-1">Q1</span><span class="rounded bg-[#ffe978] py-1">Q2</span><span class="rounded bg-[#ffbd91] py-1">Q3</span><span class="rounded bg-[#e7d8ff] py-1">Q4</span>
+              </div>
+              <div class="mt-6 space-y-5">
+                <div class="grid grid-cols-4 gap-3"><span class="h-3 rounded bg-[#93f4be]"></span><span class="h-3 rounded bg-[#ffe978]"></span><span class="h-3 rounded bg-[#d7ecff]"></span><span class="h-3 rounded bg-[#c7a4ff]"></span></div>
+                <div class="grid grid-cols-4 gap-3"><span class="h-4 rounded bg-[#c9ffd9]"></span><span class="h-4 rounded bg-[#c9ffd9]"></span><span class="h-4 rounded bg-[#d7ecff]"></span><span class="h-4 rounded bg-[#e7d8ff]"></span></div>
+                <div class="grid grid-cols-4 gap-3"><span class="h-4 rounded bg-transparent"></span><span class="h-4 rounded bg-[#ffe978]"></span><span class="h-4 rounded bg-[#d7ecff]"></span><span class="h-4 rounded bg-[#c7a4ff]"></span></div>
+                <div class="grid grid-cols-4 gap-3"><span class="h-4 rounded bg-[#93f4be]"></span><span class="h-4 rounded bg-[#93f4be]"></span><span class="h-4 rounded bg-[#d7ecff]"></span><span class="h-4 rounded bg-[#d7ecff]"></span></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#d7ecff] p-2 text-[#0b7cff]"><i data-lucide="flag" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">Project roadmap</h3><p class="text-lg text-black/60">Team template <span class="text-[#6a38ff]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#d7ecff] px-3 py-1 text-lg text-[#0b7cff]">Used by 3.1k teams</span>
+            </div>
+          </article>
+
+          <!-- Template 3 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-[#fff9ed] p-5" style="background-image:linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mb-5 text-center text-xl uppercase text-[#d08a00]">User journey map</div>
+              <div class="grid grid-cols-4 gap-3 text-center text-lg">
+                <span class="rounded bg-[#c9ffd9] py-1">Awareness</span><span class="rounded bg-[#ffe978] py-1">Consideration</span><span class="rounded bg-[#d7ecff] py-1">Decide</span><span class="rounded bg-[#e7d8ff] py-1">Retention</span>
+              </div>
+              <div class="mt-5 grid grid-cols-5 gap-3 text-center text-lg">
+                <div class="space-y-4 text-left"><p>Actions</p><p>Touchpoints</p><p>Feelings</p><p>Opportunities</p></div>
+                <div class="space-y-4"><span class="block h-5 rounded bg-white"></span><i data-lucide="search" class="mx-auto h-5 w-5"></i><span class="block">🙂</span><span class="block h-9 rounded bg-[#93f4be]"></span></div>
+                <div class="space-y-4"><span class="block h-5 rounded bg-white"></span><i data-lucide="credit-card" class="mx-auto h-5 w-5"></i><span class="block">😐</span><span class="block h-9 rounded bg-[#ffe978]"></span></div>
+                <div class="space-y-4"><span class="block h-5 rounded bg-white"></span><i data-lucide="shopping-cart" class="mx-auto h-5 w-5"></i><span class="block">🙂</span><span class="block h-9 rounded bg-[#d7ecff]"></span></div>
+                <div class="space-y-4"><span class="block h-5 rounded bg-white"></span><i data-lucide="mail" class="mx-auto h-5 w-5"></i><span class="block">😄</span><span class="block h-9 rounded bg-[#c7a4ff]"></span></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#ffe0a3] p-2 text-[#d08a00]"><i data-lucide="user-round" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">User journey map</h3><p class="text-lg text-black/60">Canvas Studio <span class="text-[#0b7cff]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#ffd6dc] px-3 py-1 text-lg text-[#db2f45]">Popular</span>
+              <span class="rounded-full bg-[#c9ffd9] px-3 py-1 text-lg text-[#119c4a]">Free</span>
+            </div>
+          </article>
+
+          <!-- Template 4 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-[#fbf7ff] p-5" style="background-image:linear-gradient(rgba(106,56,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(106,56,255,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mb-5 text-center text-xl uppercase text-[#6a38ff]">Design Sprint</div>
+              <div class="grid grid-cols-5 gap-3 text-center text-lg">
+                <span class="rounded bg-[#e7d8ff] py-1 text-sm">Understand</span><span class="rounded bg-[#d7ecff] py-1 text-sm">Sketch</span><span class="rounded bg-[#c9ffd9] py-1 text-sm">Decide</span><span class="rounded bg-[#ffe978] py-1 text-sm">Prototype</span><span class="rounded bg-[#ffbd91] py-1 text-sm">Test</span>
+              </div>
+              <div class="mt-6 flex justify-between gap-4 px-2">
+                <div class="w-full space-y-3"><span class="block h-10 w-full rounded bg-[#e7d8ff]"></span><span class="block h-12 w-full rounded bg-[#e7d8ff]"></span></div>
+                <div class="w-full space-y-3"><span class="block h-16 w-full rounded bg-[#d7ecff]"></span><span class="block h-8 w-full rounded bg-[#d7ecff]"></span></div>
+                <div class="w-full space-y-3"><span class="block h-12 w-full rounded bg-[#c9ffd9]"></span><span class="block h-10 w-full rounded bg-[#c9ffd9]"></span></div>
+                <div class="w-full space-y-3"><span class="block h-8 w-full rounded bg-[#ffe978]"></span><span class="block h-14 w-full rounded bg-[#ffe978]"></span></div>
+                <div class="w-full space-y-3"><span class="block h-14 w-full rounded bg-[#ffbd91]"></span><span class="block h-10 w-full rounded bg-[#ffbd91]"></span></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#e7d8ff] p-2 text-[#6a38ff]"><i data-lucide="zap" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">Design sprint</h3><p class="text-lg text-black/60">Team template <span class="text-[#119c4a]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#d7ecff] px-3 py-1 text-lg text-[#0b7cff]">Used by 2.4k teams</span>
+            </div>
+          </article>
+
+          <!-- Template 5 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-[#fffdf7] p-5" style="background-image:linear-gradient(rgba(208,138,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(208,138,0,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mb-5 text-center text-xl uppercase text-[#d08a00]">Kanban Board</div>
+              <div class="grid grid-cols-3 gap-4 text-center text-lg"><span class="rounded bg-[#ffe978] py-1">To Do</span><span class="rounded bg-[#d7ecff] py-1">Doing</span><span class="rounded bg-[#c9ffd9] py-1">Done</span></div>
+              <div class="mt-6 grid grid-cols-3 gap-4">
+                <div class="space-y-3"><span class="block h-10 rounded bg-[#ffbd91]"></span><span class="block h-16 rounded bg-[#ffd6dc]"></span><span class="block h-8 rounded bg-[#ffbd91]"></span></div>
+                <div class="space-y-3"><span class="block h-12 rounded bg-[#9fe5ff]"></span><span class="block h-10 rounded bg-[#c7a4ff]"></span></div>
+                <div class="space-y-3"><span class="block h-16 rounded bg-[#93f4be]"></span><span class="block h-10 rounded bg-[#c9ffd9]"></span><span class="block h-12 rounded bg-[#93f4be]"></span></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#ffe978] p-2 text-[#d08a00]"><i data-lucide="layout-dashboard" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">Kanban board</h3><p class="text-lg text-black/60">Canvas Studio <span class="text-[#0b7cff]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#c9ffd9] px-3 py-1 text-lg text-[#119c4a]">Free</span>
+            </div>
+          </article>
+
+          <!-- Template 6 -->
+          <article class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-[0_0.75rem_2rem_rgba(0,0,0,0.08)]">
+            <div class="relative h-72 rounded-xl border border-black/10 bg-[#f7fffb] p-5" style="background-image:linear-gradient(rgba(17,156,74,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(17,156,74,0.05) 1px,transparent 1px);background-size:24px 24px;">
+              <div class="mb-5 text-center text-xl uppercase text-[#119c4a]">Mind map</div>
+              <div class="relative mt-8 flex justify-center">
+                <div class="absolute left-1/2 top-1/2 -z-10 h-36 w-56 -translate-x-1/2 -translate-y-1/2">
+                  <svg viewBox="0 0 100 100" class="h-full w-full stroke-black/20" fill="none" stroke-width="2"><path d="M50 50 L15 20 M50 50 L85 20 M50 50 L15 80 M50 50 L85 80 M50 50 L5 50 M50 50 L95 50"></path></svg>
+                </div>
+                <div class="relative z-10 flex h-14 w-28 items-center justify-center rounded-xl border-2 border-black bg-white shadow-sm"><span class="text-lg font-medium tracking-tight text-black">Idea</span></div>
+              </div>
+              <div class="absolute left-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#c9ffd9] px-3 py-1.5 text-sm">Branch</div>
+              <div class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#ffe978] px-3 py-1.5 text-sm">Branch</div>
+              <div class="absolute left-10 top-12 rounded-lg bg-[#d7ecff] px-3 py-1.5 text-sm">Node</div>
+              <div class="absolute right-10 top-12 rounded-lg bg-[#e7d8ff] px-3 py-1.5 text-sm">Node</div>
+              <div class="absolute left-10 bottom-12 rounded-lg bg-[#ffd6dc] px-3 py-1.5 text-sm">Node</div>
+              <div class="absolute right-10 bottom-12 rounded-lg bg-[#c7a4ff] px-3 py-1.5 text-sm">Node</div>
+            </div>
+            <div class="flex items-center gap-3 px-2 py-4">
+              <div class="rounded-lg bg-[#c9ffd9] p-2 text-[#119c4a]"><i data-lucide="git-merge" class="h-6 w-6"></i></div>
+              <div><h3 class="text-2xl tracking-tight">Mind map</h3><p class="text-lg text-black/60">Canvas Studio <span class="text-[#0b7cff]">●</span></p></div>
+              <span class="ml-auto rounded-full bg-[#ffd6dc] px-3 py-1 text-lg text-[#db2f45]">Popular</span>
+            </div>
+          </article>
+
+          <div class="col-span-1 lg:col-span-3 mt-6 flex justify-center">
+            <button class="inline-flex h-12 items-center justify-center rounded-full bg-black px-8 text-lg font-medium text-white shadow-md transition-all hover:-translate-y-1 hover:bg-black/80 hover:shadow-lg">See more templates</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section id="testimonials" class="relative mx-auto max-w-[105rem] px-5 pb-24 sm:px-8 lg:px-12">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-20 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px">
+        <style>
+          @keyframes avatarFloat1 { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+          @keyframes avatarFloat2 { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(10px) rotate(-3deg); } }
+          @keyframes avatarFloat3 { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-8px) scale(1.04); } }
+          .float-anim-1 { animation: avatarFloat1 5s ease-in-out infinite; }
+          .float-anim-2 { animation: avatarFloat2 6s ease-in-out infinite 1s; }
+          .float-anim-3 { animation: avatarFloat3 5.5s ease-in-out infinite 0.5s; }
+        </style>
+
+        <span class="absolute left-[10%] top-[19%] h-3 w-3 rounded-full bg-[#ff6b7a]"></span>
+        <span class="absolute left-[28%] top-[41%] h-3 w-3 rounded-full bg-[#ff6b7a]"></span>
+        <span class="absolute right-[22%] top-[39%] h-3 w-3 rounded-full bg-[#59d985]"></span>
+        <span class="absolute right-[17%] top-[17%] h-3 w-3 rounded-full bg-[#0b7cff]"></span>
+        <span class="absolute left-[18%] bottom-[18%] h-3 w-3 rounded-full bg-[#ffb21a]"></span>
+        <span class="absolute right-[11%] bottom-[18%] h-3 w-3 rounded-full bg-[#b663ff]"></span>
+
+        <div data-index="0" class="floating-avatar float-anim-1 absolute left-[22%] top-[15%] hidden h-12 w-12 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.14)] transition-all duration-300 md:block scale-125 ring-4 ring-[#0b7cff]/30 z-20" style="background-color: rgb(11, 124, 255);">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Raymond Galario" class="h-full w-full object-cover">
+        </div>
+        <div data-index="1" class="floating-avatar float-anim-2 absolute left-[10%] top-[32%] hidden h-20 w-20 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.18)] transition-all duration-300 md:block opacity-60 hover:scale-110 hover:opacity-100" style="background-color: rgb(159, 229, 255);">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80" alt="Sarah Jenkins" class="h-full w-full object-cover">
+        </div>
+        <div data-index="2" class="floating-avatar float-anim-3 absolute left-[9%] top-[61%] hidden h-14 w-14 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.14)] transition-all duration-300 md:block opacity-60 hover:scale-110 hover:opacity-100" style="background-color: rgb(215, 236, 255);">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Michael Chen" class="h-full w-full object-cover">
+        </div>
+        <div data-index="3" class="floating-avatar float-anim-1 absolute right-[10%] top-[29%] hidden h-16 w-16 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.14)] transition-all duration-300 md:block opacity-60 hover:scale-110 hover:opacity-100" style="background-color: rgb(255, 233, 120);">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=140&q=80" alt="Emily Rodriguez" class="h-full w-full object-cover">
+        </div>
+        <div data-index="4" class="floating-avatar float-anim-2 absolute right-[9%] top-[59%] hidden h-14 w-14 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.14)] transition-all duration-300 md:block opacity-60 hover:scale-110 hover:opacity-100" style="background-color: rgb(255, 189, 145);">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="David Kim" class="h-full w-full object-cover">
+        </div>
+        <div data-index="5" class="floating-avatar float-anim-3 absolute right-[22%] bottom-[12%] hidden h-16 w-16 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow-[0_0.75rem_1.5rem_rgba(0,0,0,0.14)] transition-all duration-300 md:block opacity-60 hover:scale-110 hover:opacity-100" style="background-color: rgb(89, 217, 133);">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Sophia Patel" class="h-full w-full object-cover">
+        </div>
+
+        <button id="prev-btn" class="absolute left-[5%] top-[57%] z-20 hidden h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-white shadow-sm transition-colors hover:bg-gray-50 md:flex"><i data-lucide="arrow-left" class="h-6 w-6"></i></button>
+        <button id="next-btn" class="absolute right-[5%] top-[57%] z-20 hidden h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-white shadow-sm transition-colors hover:bg-gray-50 md:flex"><i data-lucide="arrow-right" class="h-6 w-6"></i></button>
+
+        <div class="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center">
+          <div class="mb-5 flex items-center gap-3 text-[#0b7cff]">
+            <span class="h-4 w-7 rounded-full border-t-2 border-[#0b7cff]"></span>
+            <p class="text-2xl uppercase tracking-tight">Testimonials</p>
+            <span class="h-4 w-7 rounded-full border-t-2 border-[#0b7cff]"></span>
+          </div>
+          <h2 class="max-w-3xl text-6xl leading-[0.95] tracking-tight [font-family:Chewy,cursive] sm:text-7xl md:text-8xl">Teams love how<br class="hidden sm:block">ideas come together.</h2>
+          <span class="mt-3 h-1.5 w-56 rotate-[-2deg] rounded-full bg-[#0b7cff]"></span>
+          <p class="mt-5 max-w-2xl text-xl leading-tight tracking-tight md:text-2xl">From first brainstorm to final presentation, Canvas helps teams collaborate faster, stay aligned, and move work forward.</p>
+
+          <div id="testimonial-dynamic" class="mt-9 flex w-full flex-col items-center transition-all duration-300 ease-out">
+            <div class="relative">
+              <div id="t-avatar-container" class="h-28 w-28 overflow-hidden rounded-full border-4 border-white shadow-[0_0.75rem_1.75rem_rgba(0,0,0,0.18)] transition-colors duration-500" style="background-color: #0b7cff;">
+                <img id="t-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=220&q=80" alt="Raymond Galario" class="h-full w-full object-cover">
+              </div>
+              <i data-lucide="sparkles" class="absolute -right-8 top-0 h-7 w-7 text-[#0b7cff]"></i>
+            </div>
+            <h3 id="t-name" class="mt-5 text-2xl tracking-tight">Raymond Galario</h3>
+            <p id="t-role" class="text-lg leading-tight text-black/60 text-center">Creative Director, Studio North<br>Sydney, Australia</p>
+            <div id="t-stars" class="mt-3 flex">
+              <span class="text-3xl text-[#ffb21a]">★</span><span class="text-3xl text-[#ffb21a]">★</span><span class="text-3xl text-[#ffb21a]">★</span><span class="text-3xl text-[#ffb21a]">★</span><span class="text-3xl text-[#ffb21a]">★</span>
+            </div>
+            <div class="relative mt-3 w-full max-w-2xl">
+              <span class="pointer-events-none absolute -left-28 -top-16 hidden text-[11rem] leading-none text-black/5 md:block">"</span>
+              <p id="t-quote" class="flex min-h-[7rem] items-center justify-center text-xl leading-tight tracking-tight md:text-2xl">Canvas helps our team turn scattered ideas into clear plans. It's simple, collaborative, and keeps everyone moving in the same direction.</p>
+              <span class="pointer-events-none absolute -right-28 -bottom-20 hidden text-[11rem] leading-none text-black/5 md:block">"</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA & FOOTER -->
+    <section id="cta-footer" class="relative mx-auto max-w-[105rem] px-5 pb-10 sm:px-8 lg:px-12">
+      <div class="relative overflow-hidden rounded-[2rem] border-2 border-black/10 bg-white px-5 py-16 shadow-[0_1.25rem_3rem_rgba(0,0,0,0.08)] sm:px-10 lg:px-14" style="background-image:linear-gradient(rgba(11,124,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(11,124,255,0.05) 1px,transparent 1px);background-size:44px 44px;">
+        <span class="absolute left-[14%] top-[20%] h-3 w-3 rounded-full bg-[#ff6b7a]"></span>
+        <span class="absolute left-[20%] top-[40%] h-3 w-3 rounded-full bg-[#59d985]"></span>
+        <span class="absolute right-[16%] top-[20%] h-3 w-3 rounded-full bg-[#0b7cff]"></span>
+        <span class="absolute right-[20%] top-[42%] h-3 w-3 rounded-full bg-[#ffb21a]"></span>
+        <svg class="pointer-events-none absolute right-[27%] top-[26%] hidden h-24 w-24 text-[#0b7cff] md:block" viewBox="0 0 90 90" fill="none">
+          <path d="M58 8C76 38 58 62 31 55C12 50 20 25 39 34C57 43 48 70 20 76" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+          <path d="M50 9L60 8L60 20" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div class="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center">
+          <i data-lucide="sparkles" class="mb-1 h-9 w-9 -rotate-12 text-[#0b7cff]"></i>
+          <h2 class="text-6xl leading-[0.95] tracking-tight [font-family:Chewy,cursive] sm:text-7xl md:text-8xl">Ready to bring<br class="hidden sm:block">your ideas together?</h2>
+          <p class="mt-5 max-w-xl text-xl leading-tight tracking-tight md:text-2xl">Brainstorm, collaborate, and turn ideas into action—together, all in Canvas.</p>
+          <div class="mt-8 flex flex-col items-center gap-5 sm:flex-row">
+            <a href="#" class="rounded-lg border-2 border-black bg-[#0b7cff] px-8 py-3 text-2xl text-white shadow-[inset_0_0_0_0.125rem_rgba(255,255,255,0.75),0_0.2rem_0_#000]">Start for free</a>
+            <a href="#" class="relative px-4 py-3 text-2xl">Book demo<span class="absolute bottom-2 left-4 h-1 w-[calc(100%-2rem)] rotate-[-2deg] rounded-full bg-[#0b7cff]"></span></a>
+          </div>
+        </div>
+
+        <footer class="relative z-10 mt-20 border-t border-black/15 pt-10">
+          <div class="grid gap-10 lg:grid-cols-[1.25fr_1fr_1fr_1fr_1.15fr]">
+            <div class="max-w-xs">
+              <div class="mb-5 flex items-center gap-4"><span class="text-4xl tracking-tight [font-family:Chewy,cursive]">Canvas</span></div>
+              <p class="text-xl leading-tight tracking-tight">A visual collaboration workspace for teams to brainstorm, plan, and present together.</p>
+            </div>
+            <div class="border-black/10 lg:border-l lg:pl-10">
+              <h3 class="mb-4 text-xl tracking-tight">Product</h3>
+              <ul class="space-y-3 text-lg"><li><a href="#features">Features</a></li><li><a href="#templates">Templates</a></li><li><a href="#">Use Cases</a></li><li><a href="#">Pricing</a></li></ul>
+            </div>
+            <div class="border-black/10 lg:border-l lg:pl-10">
+              <h3 class="mb-4 text-xl tracking-tight">Resources</h3>
+              <ul class="space-y-3 text-lg"><li><a href="#">Help Center</a></li><li><a href="#">Blog</a></li><li><a href="#">Community</a></li><li><a href="#">Contact</a></li></ul>
+            </div>
+            <div class="border-black/10 lg:border-l lg:pl-10">
+              <h3 class="mb-4 text-xl tracking-tight">Company</h3>
+              <ul class="space-y-3 text-lg"><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul>
+            </div>
+            <div class="border-black/10 lg:border-l lg:pl-10">
+              <h3 class="mb-4 text-xl tracking-tight">Compare / Tools</h3>
+              <ul class="space-y-3 text-lg"><li><a href="#">Whiteboards</a></li><li><a href="#">Moodboards</a></li><li><a href="#">Presentations</a></li><li><a href="#">Team comments</a></li></ul>
+            </div>
+          </div>
+          <div class="mt-10 flex flex-col gap-5 border-t border-black/15 pt-6 text-lg md:flex-row md:items-center">
+            <p>© 2026 Canvas. All rights reserved.</p>
+            <div class="flex flex-wrap md:ml-auto gap-x-5 gap-y-5 items-center">
+              <a href="#" class="flex items-center gap-1.5 transition-colors duration-200 hover:text-black/70"><i data-lucide="shield-check" class="h-4 w-4"></i>Privacy</a>
+              <span class="text-black/20">|</span>
+              <a href="#" class="flex items-center gap-1.5 transition-colors duration-200 hover:text-black/70"><i data-lucide="file-text" class="h-4 w-4"></i>Terms</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    lucide.createIcons({ attrs: { "stroke-width": 1.5 } });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    // Testimonials logic
+    (function() {
+      const tData = [
+        { name: 'Raymond Galario', role: 'Creative Director, Studio North<br>Sydney, Australia', stars: 5, quote: "Canvas helps our team turn scattered ideas into clear plans. It's simple, collaborative, and keeps everyone moving in the same direction.", img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=220&q=80', color: '#0b7cff' },
+        { name: 'Sarah Jenkins', role: 'Product Manager, TechFlow<br>San Francisco, USA', stars: 5, quote: 'The intuitive design and seamless collaboration features have completely transformed how our product team operates.', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=220&q=80', color: '#9fe5ff' },
+        { name: 'Michael Chen', role: 'Lead Designer, Innovate<br>London, UK', stars: 4, quote: 'Finally, a tool that understands the creative process. It feels like magic when everyone is working together in real-time.', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=220&q=80', color: '#d7ecff' },
+        { name: 'Emily Rodriguez', role: 'Marketing Head, GrowthCo<br>Austin, USA', stars: 5, quote: "We've cut our planning time in half. It's exactly what we needed to scale our campaigns effectively.", img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=220&q=80', color: '#ffe978' },
+        { name: 'David Kim', role: 'Founder, StartupX<br>Seoul, South Korea', stars: 5, quote: 'Bringing ideas to life has never been this easy. The platform is responsive, fast, and incredibly reliable.', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=220&q=80', color: '#ffbd91' },
+        { name: 'Sophia Patel', role: 'UX Researcher, DesignOps<br>Toronto, Canada', stars: 4, quote: 'The visual feedback loops are a game changer. I can easily share insights and get immediate input from stakeholders.', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=220&q=80', color: '#59d985' }
+      ];
+      let currentIdx = 0;
+      const elements = {
+        dynamic: document.getElementById('testimonial-dynamic'),
+        avatar: document.getElementById('t-avatar'),
+        avatarContainer: document.getElementById('t-avatar-container'),
+        name: document.getElementById('t-name'),
+        role: document.getElementById('t-role'),
+        quote: document.getElementById('t-quote'),
+        stars: document.getElementById('t-stars'),
+        floating: document.querySelectorAll('.floating-avatar')
+      };
+      function updateActiveState() {
+        elements.floating.forEach((el, i) => {
+          if (i === currentIdx) {
+            el.classList.add('scale-125', 'ring-4', 'ring-[#0b7cff]/30', 'z-20');
+            el.classList.remove('opacity-60', 'hover:scale-110', 'hover:opacity-100');
+          } else {
+            el.classList.remove('scale-125', 'ring-4', 'ring-[#0b7cff]/30', 'z-20');
+            el.classList.add('opacity-60', 'hover:scale-110', 'hover:opacity-100');
+          }
+        });
+      }
+      function setTestimonial(index) {
+        if (index === currentIdx) return;
+        elements.dynamic.style.opacity = '0';
+        elements.dynamic.style.transform = 'translateY(15px) scale(0.98)';
+        setTimeout(() => {
+          currentIdx = index;
+          const item = tData[index];
+          elements.avatar.src = item.img;
+          elements.avatar.alt = item.name;
+          elements.avatarContainer.style.backgroundColor = item.color;
+          elements.name.textContent = item.name;
+          elements.role.innerHTML = item.role;
+          elements.quote.textContent = item.quote;
+          const filled = '<span class="text-3xl text-[#ffb21a]">★</span>';
+          const empty = '<span class="text-3xl text-gray-200">★</span>';
+          elements.stars.innerHTML = filled.repeat(item.stars) + empty.repeat(5 - item.stars);
+          updateActiveState();
+          elements.dynamic.style.opacity = '1';
+          elements.dynamic.style.transform = 'translateY(0) scale(1)';
+        }, 300);
+      }
+      document.getElementById('prev-btn').addEventListener('click', () => setTestimonial((currentIdx - 1 + tData.length) % tData.length));
+      document.getElementById('next-btn').addEventListener('click', () => setTestimonial((currentIdx + 1) % tData.length));
+      elements.floating.forEach((el) => {
+        el.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+          setTestimonial(idx);
+        });
+      });
+      updateActiveState();
+    })();
+
+    // GSAP scroll animations
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.registerPlugin(ScrollTrigger);
+      document.querySelectorAll('section').forEach(section => {
+        const selectors = ['h2','h3','p','article','aside','footer > div > div','.floating-avatar','button:not(#prev-btn):not(#next-btn)','a.rounded-lg','a.relative.px-4','.mb-5.flex','.mb-4.flex','.mb-10.flex.gap-4','.mb-14.text-center > div','#testimonial-dynamic','.flex.flex-wrap > button','span.h-1\\.5','i[data-lucide]'].join(', ');
+        const animElements = section.querySelectorAll(selectors);
+        const targets = Array.from(animElements).filter(el => {
+          if (el.closest('#testimonial-dynamic') && el.id !== 'testimonial-dynamic') return false;
+          let parent = el.parentElement;
+          while(parent && parent !== section) {
+            if (Array.from(animElements).includes(parent)) return false;
+            parent = parent.parentElement;
+          }
+          return true;
+        });
+        if (targets.length > 0) {
+          gsap.from(targets, {
+            y: 40, opacity: 0, filter: 'blur(10px)', duration: 1, stagger: 0.1, ease: 'power3.out',
+            clearProps: 'filter,transform,opacity',
+            scrollTrigger: { trigger: section, start: 'top 80%', once: true }
+          });
+        }
+      });
+      document.querySelectorAll('a, button, article').forEach(el => {
+        if (el.closest('.hero-anim-cta-1') || el.closest('.hero-anim-cta-2')) return;
+        el.addEventListener('mouseenter', () => gsap.to(el, { scale: 1.02, duration: 0.4, ease: 'power3.out', overwrite: 'auto' }));
+        el.addEventListener('mouseleave', () => gsap.to(el, { scale: 1, duration: 0.4, ease: 'power3.out', overwrite: 'auto' }));
+        el.addEventListener('mousedown', () => gsap.to(el, { scale: 0.98, duration: 0.1, overwrite: 'auto' }));
+        el.addEventListener('mouseup', () => gsap.to(el, { scale: 1.02, duration: 0.1, overwrite: 'auto' }));
+      });
+    });
+  </script>
+</body>
+</html>

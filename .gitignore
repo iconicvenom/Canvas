@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.vercel
+apps/server/uploads/*
+!apps/server/uploads/.gitkeep
+canvas-cursor-prompt.md

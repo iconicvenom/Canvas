@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-canvas-bg font-hand text-black antialiased;
+}
+
+.btn-primary {
+  @apply rounded-xl border-2 border-black bg-canvas-primary px-6 py-2.5 text-white shadow-card-inset transition-transform hover:translate-y-[0.375rem];
+}
+
+.btn-secondary {
+  @apply rounded-xl border-2 border-black bg-white px-6 py-2.5 shadow-card transition-transform hover:translate-y-[0.375rem];
+}
+
+.input-field {
+  @apply w-full rounded-xl border-2 border-black bg-white px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-canvas-primary;
+}
+
+.card-surface {
+  @apply rounded-2xl border-2 border-black bg-white shadow-card;
+}
+
+.grid-bg {
+  background-image: radial-gradient(
+    rgba(11, 124, 255, 0.15) 1px,
+    transparent 1px
+  );
+  background-size: 44px 44px;
+}

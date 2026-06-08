@@ -1,0 +1,23 @@
+{
+  "name": "canvas-app",
+  "private": true,
+  "author": "Vignesh Goud <https://github.com/iconicvenom>",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"cd apps/server && ../../node_modules/.bin/tsx watch src/index.ts\" \"cd apps/web && ./node_modules/.bin/vite\"",
+    "build": "pnpm --filter server build && pnpm --filter web build",
+    "vercel-build": "prisma generate && prisma migrate deploy && pnpm --filter server build && pnpm --filter web build",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.1.14",
+    "@prisma/client": "^6.8.2",
+    "bcryptjs": "^3.0.2",
+    "concurrently": "^9.1.2",
+    "prisma": "^6.8.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

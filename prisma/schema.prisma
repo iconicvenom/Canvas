@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  passwordHash String
+  avatarColor  String        @default("#0b7cff")
+  createdAt    DateTime      @default(now())
+  boards       BoardMember[]
+  comments     Comment[]
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Board {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  templateId  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  members     BoardMember[]
+  elements    Element[]
+  comments    Comment[]
+  frames      Frame[]
+}
+
+model BoardMember {
+  id      String @id @default(cuid())
+  boardId String
+  userId  String
+  role    String @default("editor")
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([boardId, userId])
+}
+
+model Element {
+  id        String   @id @default(cuid())
+  boardId   String
+  type      String
+  x         Float
+  y         Float
+  width     Float?
+  height    Float?
+  rotation  Float    @default(0)
+  data      Json
+  zIndex    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  boardId   String
+  userId    String
+  parentId  String?
+  x         Float
+  y         Float
+  text      String
+  resolved  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  board     Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("Replies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("Replies")
+}
+
+model Frame {
+  id      String @id @default(cuid())
+  boardId String
+  name    String
+  x       Float
+  y       Float
+  width   Float
+  height  Float
+  order   Int
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+}
