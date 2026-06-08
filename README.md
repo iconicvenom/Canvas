@@ -4,7 +4,7 @@ A full-stack, real-time collaborative whiteboard. Multiple people can edit the s
 
 Built with **React**, **Konva.js**, **Express**, **Socket.IO**, and **PostgreSQL**.
 
-**Author:** [Vignesh Goud](https://github.com/iconicvenom) ([@iconicvenom](https://github.com/iconicvenom))
+**Author:** [@iconicvenom](https://github.com/iconicvenom)
 
 ---
 
@@ -585,7 +585,7 @@ The frontend uses `@/` → `apps/web/src/` (configured in `vite.config.ts`).
 
 ## Author
 
-**Vignesh Goud** — [@iconicvenom](https://github.com/iconicvenom)
+[@iconicvenom](https://github.com/iconicvenom)
 
 ## License
 

@@ -1,7 +1,7 @@
 {
   "name": "canvas-app",
   "private": true,
-  "author": "Vignesh Goud <https://github.com/iconicvenom>",
+  "author": "iconicvenom <https://github.com/iconicvenom>",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "concurrently -n server,web -c blue,green \"cd apps/server && ../../node_modules/.bin/tsx watch src/index.ts\" \"cd apps/web && ./node_modules/.bin/vite\"",

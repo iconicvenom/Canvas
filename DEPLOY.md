@@ -10,7 +10,7 @@ Use [Neon](https://neon.tech) (free tier) or [Vercel Postgres](https://vercel.co
 ## 2. Deploy via Vercel CLI
 
 ```bash
-cd /Users/vignesh/Downloads/Canvas
+cd Canvas
 pnpm install
 npx vercel login
 npx vercel link
